@@ -9,7 +9,10 @@ main(int argc, char **argv)
 	process_args(&this_session, argc, argv);
 	read_config(&this_session);
 
-	read_data(&this_session);
+	parse_file(&this_session);
+	print_headwords(&this_session.dict);
+
+	clear_session(&this_session);
 
 	return 0;
 }
