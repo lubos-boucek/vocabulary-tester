@@ -3,6 +3,8 @@
 #include <ctype.h>
 /* strlcpy */
 #include <string.h>
+/* isblank */
+#include <ctype.h>
 
 #include "common.h"
 
@@ -14,6 +16,7 @@ void parse_file(struct session *s)
 	ssize_t line_length;
 	enum parsing_state state = BETWEEN, old_state;
 	struct entry * new_entry;
+	int def_offset;
 
 	fp = fopen(s->data_filename, "r");
 	
@@ -22,12 +25,9 @@ void parse_file(struct session *s)
 		process_line(line, line_length, &state);
 		if (state == HEADWORD) {
 			new_entry = add_entry(&s->dict);
-/*
-	TODO: into a fnc
-*/
-			if ((new_entry->headword = reallocarray(NULL, line_length + 1, sizeof(char))) == NULL)
-				err(1, NULL);
-			(void)strlcpy(new_entry->headword, line, line_length + 1);
+			update_headword(new_entry, line, line_length);
+		} else if (state == ENTRY && (def_offset = is_definition(line)) > -1) {
+			add_definition(new_entry, line + def_offset, line_length - def_offset);
 		}
 	}
 
@@ -59,4 +59,24 @@ void process_line(const char *line, ssize_t line_length, enum parsing_state *sta
 	} else {
 		*state = BETWEEN;
 	}
+}
+
+/*	-1 : false
+	or : starting position */
+int is_definition(const char *line)
+{
+	int i, digits = 1;
+
+	for (i = 0; line[i]; i++) {
+		if (isblank(line[i]))
+			continue;
+		if (line[i] == ':')
+			return i;
+		else if (isdigit(line[i])) {
+			while (isdigit(line[i + 1]))
+				i++;
+		}
+	}
+
+	return -1;
 }

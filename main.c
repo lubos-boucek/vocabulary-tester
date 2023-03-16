@@ -10,7 +10,7 @@ main(int argc, char **argv)
 	read_config(&this_session);
 
 	parse_file(&this_session);
-	print_headwords(&this_session.dict);
+	print_dictionary(&this_session.dict);
 
 	clear_session(&this_session);
 

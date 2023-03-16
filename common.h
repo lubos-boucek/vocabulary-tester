@@ -27,12 +27,14 @@ void clear_session(struct session *);
 /* data.h */
 
 void init_entry(struct entry *);
-void add_definition(struct entry *);
+void update_headword(struct entry *, const char *, size_t);
+void add_definition(struct entry *, const char *, size_t);
+void print_entry(struct entry *);
 void clear_entry(struct entry *);
 
 void init_dictionary(struct dictionary *);
-void print_headwords(struct dictionary *);
 struct entry * add_entry(struct dictionary *);
+void print_dictionary(struct dictionary *);
 void clear_dictionary(struct dictionary *);
 
 /* parse.h */
@@ -41,3 +43,4 @@ enum parsing_state {BETWEEN, HEADWORD, ENTRY};
 
 void parse_file(struct session *);
 void process_line(const char *, ssize_t, enum parsing_state *);
+int is_definition(const char *);
