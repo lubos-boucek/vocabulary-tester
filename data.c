@@ -6,15 +6,18 @@
 
 /* struct entry */
 
-void init_entry(struct entry *e)
+void
+init_entry(struct entry *e)
 {
 	e->headword = NULL;
 	e->definitions = NULL;
 	e->n_definitions = 0;
 }
 
-/* update_headword and add_definition trim the newline */
-void update_headword(struct entry *e, const char *headword, size_t size)
+/* CAVE: update_headword and add_definition trim the newline */
+
+void
+update_headword(struct entry *e, const char *headword, size_t size)
 {
 	if ((e->headword = (char *)reallocarray(e->headword, size, sizeof(char))) == NULL) {
 		err(1, NULL);
@@ -23,7 +26,8 @@ void update_headword(struct entry *e, const char *headword, size_t size)
 	(void)strlcpy(e->headword, headword, size);
 }
 
-void add_definition(struct entry *e, const char *definition, size_t size)
+void
+add_definition(struct entry *e, const char *definition, size_t size)
 {
 	if ((e->definitions = (char **)reallocarray(e->definitions, ++e->n_definitions, sizeof(char *))) == NULL) {
 		err(1, NULL);
@@ -36,7 +40,8 @@ void add_definition(struct entry *e, const char *definition, size_t size)
 	(void)strlcpy(e->definitions[e->n_definitions - 1], definition, size);
 }
 
-void clear_entry(struct entry *e)
+void
+clear_entry(struct entry *e)
 {
 	int i;
 
@@ -52,45 +57,49 @@ void clear_entry(struct entry *e)
 
 /* struct dictionary */
 
-void init_dictionary(struct dictionary *d)
+void
+init_dictionary(struct dictionary *d)
 {
-	d->entries = NULL;
-	d->n_entries = 0;
+	new_array(&d->array_entries, sizeof(struct entry));
 }
 
-struct entry * add_entry(struct dictionary *d)
+struct entry *
+add_entry(struct dictionary *d)
 {
-	if ((d->entries = (struct entry *)reallocarray(d->entries, ++d->n_entries, sizeof(struct entry))) == NULL) {
-		err(1, NULL);
-	}
-	
-	init_entry(&d->entries[d->n_entries-1]);
+	struct entry *e;
 
-	return &d->entries[d->n_entries-1];
+	e = add_elements(&d->array_entries, 1);
+	init_entry(e);
+
+	return e;
 }
 
-void print_dictionary(struct dictionary *d)
+void
+print_dictionary(struct dictionary *d)
 {
 	int i, j;
+	struct entry *e;
 
-	printf("Dictionary contains %d entries:\n\n", (int)d->n_entries);
+	printf("Dictionary contains %d entries:\n\n", (int)get_length(&d->array_entries));
 
-	for (i = 0; i < d->n_entries; i++) {
-		printf("`%s` (%d)\n", d->entries[i].headword, (int)d->entries[i].n_definitions);
-		for (j = 0; j < d->entries[i].n_definitions; j++) {
-			printf("%s\n", d->entries[i].definitions[j]);
+	for (i = 0; i < get_length(&d->array_entries); i++) {
+		e = get_element(&d->array_entries, i);
+
+		printf("`%s` (%d)\n", e->headword, (int)e->n_definitions);
+		for (j = 0; j < e->n_definitions; j++) {
+			printf("%s\n", e->definitions[j]);
 		}
 	}
 }
 
-void clear_dictionary(struct dictionary *d)
+void
+clear_dictionary(struct dictionary *d)
 {
 	int i;
 
-	for (i = 0; i < d->n_entries; i++) {
-		clear_entry(&d->entries[i]);
+	for (i = 0; i < get_length(&d->array_entries); i++) {
+		clear_entry(get_element(&d->array_entries, i));
 	}
 
-	free(d->entries);
-	d->n_entries = 0;
+	delete_array(&d->array_entries);
 }

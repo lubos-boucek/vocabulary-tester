@@ -8,7 +8,8 @@
 
 #include "common.h"
 
-void parse_file(struct session *s)
+void
+parse_file(struct session *s)
 {
 	FILE *fp;
 	char *line = NULL;
@@ -38,7 +39,8 @@ void parse_file(struct session *s)
 	fclose(fp);
 }
 
-void process_line(const char *line, ssize_t line_length, enum parsing_state *state)
+void
+process_line(const char *line, ssize_t line_length, enum parsing_state *state)
 {
 	int is_blank = 1;
 	ssize_t i = 0;
@@ -63,7 +65,8 @@ void process_line(const char *line, ssize_t line_length, enum parsing_state *sta
 
 /*	-1 : false
 	or : starting position */
-int is_definition(const char *line)
+int
+is_definition(const char *line)
 {
 	int i, digits = 1;
 
@@ -72,10 +75,12 @@ int is_definition(const char *line)
 			continue;
 		if (line[i] == ':')
 			return i;
+/*
 		else if (isdigit(line[i])) {
 			while (isdigit(line[i + 1]))
 				i++;
 		}
+*/
 	}
 
 	return -1;
