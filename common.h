@@ -3,8 +3,8 @@
 
 struct entry {
 	char *headword;
-	char **definitions;
-	size_t n_definitions;
+
+	struct array array_definitions;
 };
 
 struct dictionary {

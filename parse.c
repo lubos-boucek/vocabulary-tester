@@ -15,14 +15,19 @@ parse_file(struct session *s)
 	char *line = NULL;
 	size_t line_size = 0;
 	ssize_t line_length;
-	enum parsing_state state = BETWEEN, old_state;
-	struct entry * new_entry;
+	enum parsing_state state = BETWEEN;
+/*	
+	enum parsing_state old_state;
+*/
+	struct entry *new_entry;
 	int def_offset;
 
 	fp = fopen(s->data_filename, "r");
 	
 	while ((line_length = getline(&line, &line_size, fp)) != -1) {
-		old_state = state;
+/*
+		 old_state = state;
+*/
 		process_line(line, line_length, &state);
 		if (state == HEADWORD) {
 			new_entry = add_entry(&s->dict);
@@ -68,8 +73,10 @@ process_line(const char *line, ssize_t line_length, enum parsing_state *state)
 int
 is_definition(const char *line)
 {
-	int i, digits = 1;
-
+	int i;
+/*
+	int digits = 1;
+*/
 	for (i = 0; line[i]; i++) {
 		if (isblank(line[i]))
 			continue;

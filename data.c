@@ -10,8 +10,8 @@ void
 init_entry(struct entry *e)
 {
 	e->headword = NULL;
-	e->definitions = NULL;
-	e->n_definitions = 0;
+
+	new_array(&e->array_definitions, sizeof(char *));
 }
 
 /* CAVE: update_headword and add_definition trim the newline */
@@ -29,30 +29,43 @@ update_headword(struct entry *e, const char *headword, size_t size)
 void
 add_definition(struct entry *e, const char *definition, size_t size)
 {
-	if ((e->definitions = (char **)reallocarray(e->definitions, ++e->n_definitions, sizeof(char *))) == NULL) {
+	char **d;
+
+	d = add_elements(&e->array_definitions, 1);
+
+	if ((*d = (char *)reallocarray(NULL, size, sizeof(char))) == NULL) {
 		err(1, NULL);
 	}
 
-	if ((e->definitions[e->n_definitions - 1] = (char *)reallocarray(NULL, size, sizeof(char))) == NULL) {
-		err(1, NULL);
-	}
+	(void)strlcpy(*d, definition, size);
+}
 
-	(void)strlcpy(e->definitions[e->n_definitions - 1], definition, size);
+void
+print_entry(struct entry *e)
+{
+	int i;
+
+	printf("`%s` (%d)\n", e->headword, (int)get_length(&e->array_definitions));
+
+	for (i = 0; i < get_length(&e->array_definitions); i++) {
+		printf("\t%s\n", *(char **)get_element(&e->array_definitions, i));
+	}
 }
 
 void
 clear_entry(struct entry *e)
 {
 	int i;
+	char **el;
 
 	free(e->headword);
 
-	for (i = 0; i < e->n_definitions; i++) {
-		free(e->definitions[i]);
+	for (i = 0; i < get_length(&e->array_definitions); i++) {
+		el = get_element(&e->array_definitions, i);
+		free(*el);
 	}
 
-	free(e->definitions);
-	e->n_definitions = 0;
+	delete_array(&e->array_definitions);
 }
 
 /* struct dictionary */
@@ -77,18 +90,15 @@ add_entry(struct dictionary *d)
 void
 print_dictionary(struct dictionary *d)
 {
-	int i, j;
+	int i;
 	struct entry *e;
 
-	printf("Dictionary contains %d entries:\n\n", (int)get_length(&d->array_entries));
+	printf("Dictionary contains %d entries:\n", (int)get_length(&d->array_entries));
 
 	for (i = 0; i < get_length(&d->array_entries); i++) {
 		e = get_element(&d->array_entries, i);
 
-		printf("`%s` (%d)\n", e->headword, (int)e->n_definitions);
-		for (j = 0; j < e->n_definitions; j++) {
-			printf("%s\n", e->definitions[j]);
-		}
+		print_entry(e);
 	}
 }
 
