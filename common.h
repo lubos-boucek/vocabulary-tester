@@ -4,11 +4,11 @@
 struct entry {
 	char *headword;
 
-	struct array array_definitions;
+	struct array definitions;
 };
 
 struct dictionary {
-	struct array array_entries;
+	struct array entries;
 };
 
 struct session {
