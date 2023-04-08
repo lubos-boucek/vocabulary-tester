@@ -25,9 +25,6 @@ parse_file(struct session *s)
 	fp = fopen(s->data_filename, "r");
 	
 	while ((line_length = getline(&line, &line_size, fp)) != -1) {
-/*
-		 old_state = state;
-*/
 		process_line(line, line_length, &state);
 		if (state == HEADWORD) {
 			new_entry = add_entry(&s->dict);

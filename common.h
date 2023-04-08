@@ -1,5 +1,14 @@
 #include <stdlib.h>
+
 #include "array.h"
+
+struct record {
+/*
+	datetime asked;
+	time time_to_answer;
+	int success;
+*/
+};
 
 struct entry {
 	char *headword;
@@ -11,10 +20,28 @@ struct dictionary {
 	struct array entries;
 };
 
+struct definition_position {
+	size_t entry_index;
+	size_t definition_index;
+};
+
+/* TODO: rename, questionnaire, question_table etc */
+struct quiz {
+	struct array positions;
+	size_t n_entries;
+	
+/*
+	struct array records;
+*/
+};
+
 struct session {
 	char *config_filename;
 	char *data_filename;
+
 	struct dictionary dict;
+	struct quiz quest;
+
 	int quiz_options;
 	int quiz_questions;
 };
@@ -24,6 +51,7 @@ struct session {
 void init_session(struct session *);
 void process_args(struct session *, int, char **);
 void read_config(struct session *);
+void start_session(struct session *);
 void clear_session(struct session *);
 
 /* data.h */
@@ -38,6 +66,17 @@ void init_dictionary(struct dictionary *);
 struct entry *add_entry(struct dictionary *);
 void print_dictionary(struct dictionary *);
 void clear_dictionary(struct dictionary *);
+
+/* quiz.h */
+
+enum question_type {RESERVED, DEFINITION, WORD};
+
+void build_quiz(struct quiz *, struct dictionary *);
+void print_quiz(struct quiz *);
+char *find_definition(struct dictionary *, struct definition_position *);
+char *find_headword(struct dictionary *, size_t);
+size_t which_entry(struct quiz *, uint32_t);
+unsigned generate_question(struct session *, enum question_type, unsigned);
 
 /* parse.h */
 

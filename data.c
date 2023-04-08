@@ -4,8 +4,6 @@
 
 #include "common.h"
 
-/* struct entry */
-
 void
 init_entry(struct entry *e)
 {
@@ -45,7 +43,7 @@ print_entry(struct entry *e)
 {
 	int i;
 
-	printf("`%s` (%d)\n", e->headword, (int)get_length(&e->definitions));
+	printf("`%s` (%lu)\n", e->headword, get_length(&e->definitions));
 
 	for (i = 0; i < get_length(&e->definitions); i++) {
 		printf("\t%s\n", *(char **)get_element(&e->definitions, i));
@@ -93,7 +91,7 @@ print_dictionary(struct dictionary *d)
 	int i;
 	struct entry *e;
 
-	printf("Dictionary contains %d entries:\n", (int)get_length(&d->entries));
+	printf("Dictionary contains %lu entries:\n", get_length(&d->entries));
 
 	for (i = 0; i < get_length(&d->entries); i++) {
 		e = get_element(&d->entries, i);

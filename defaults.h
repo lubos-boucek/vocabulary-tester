@@ -1,2 +1,2 @@
 #define	QUIZ_OPTIONS		5
-#define	QUIZ_QUESTIONS		10
+#define	QUIZ_QUESTIONS		20
