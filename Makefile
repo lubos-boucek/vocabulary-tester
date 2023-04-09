@@ -1,6 +1,6 @@
 CFLAGS		=	-Wall -Werror
 
-vocabulary-quiz	:	main.o session.o parse.o data.o array.o quiz.o
+vocabulary-tester	:	main.o session.o parse.o data.o array.o quiz.o
 	cc $(CFLAGS) -o $@ main.o session.o parse.o data.o array.o quiz.o
 
 main.o session.o parse.o data.o array.o quiz.o		:	*.h
@@ -22,3 +22,6 @@ array.o		:	array.c
 
 quiz.o		:	quiz.c
 	cc $(CFLAGS) -c quiz.c	
+
+lines : 
+	cat *.h *.c | cat -b

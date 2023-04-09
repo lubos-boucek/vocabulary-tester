@@ -23,7 +23,7 @@ a->element_size)) == NULL) {
 
 /* TODO: size_t p ? */
 void *
-get_element(struct array *a, int p)
+get_element(const struct array *a, int p)
 {
 	if (p < 0 || p > a->n_elements - 1)
 		return NULL;
@@ -32,7 +32,7 @@ get_element(struct array *a, int p)
 }
 
 size_t
-get_length(struct array *a)
+get_length(const struct array *a)
 {
 	return a->n_elements;
 }
