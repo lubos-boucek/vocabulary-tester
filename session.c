@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <unistd.h>
+
 #include "common.h"
 #include "defaults.h"
 
@@ -20,7 +23,30 @@ init_session(struct session *s)
 void
 process_args(struct session *s, int argc, char **argv)
 {
+	int ch;
 
+	while ((ch = getopt(argc, argv, "f:q:o:de")) != -1) {
+		switch (ch) {
+		case 'f':
+			s->data_filename = optarg;
+			break;
+		case 'q':
+			/* strtoul */		
+			break;
+
+		case 'o':
+
+			break;
+
+		case 'd':
+
+			break;
+
+		case 'e':
+
+			break;
+		}
+	}
 }
 
 void
@@ -32,18 +58,28 @@ read_config(struct session *s)
 void
 start_session(struct session *s)
 {
+	build_quiz(&s->quest, &s->dict);
+	ask_questions(s);
+}
+
+void
+ask_questions(struct session *s)
+{
+	unsigned correct, answer;
 	int i;
 
-	build_quiz(&s->quest, &s->dict);
-	print_dictionary(&s->dict);
-	print_quiz(&s->quest);
+	for (i = 0; i < s->quiz_questions; i++) {
+		correct = generate_question(s, arc4random_uniform(2), s->quiz_options);
+		printf("Your answer: ");
+		scanf("%u", &answer);
+		fflush(stdin);
+		if (correct == answer) {
+			printf("Correct!\n");
+		} else {
+			printf("Incorrect.\n");
+		}
+	}
 
-	for (i = 0; i < s->quiz_questions; i++) {
-		generate_question(s, DEFINITION, s->quiz_options);
-	}
-	for (i = 0; i < s->quiz_questions; i++) {
-		generate_question(s, WORD, s->quiz_options);
-	}
 }
 
 void

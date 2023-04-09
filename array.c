@@ -31,7 +31,8 @@ get_element(struct array *a, int p)
 	return a->address + a->element_size * p;
 }
 
-size_t get_length(struct array *a)
+size_t
+get_length(struct array *a)
 {
 	return a->n_elements;
 }

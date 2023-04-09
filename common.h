@@ -12,6 +12,7 @@ struct record {
 
 struct entry {
 	char *headword;
+	/* enum word_type type; */
 
 	struct array definitions;
 };
@@ -52,6 +53,7 @@ void init_session(struct session *);
 void process_args(struct session *, int, char **);
 void read_config(struct session *);
 void start_session(struct session *);
+void ask_questions(struct session *);
 void clear_session(struct session *);
 
 /* data.h */
@@ -69,13 +71,14 @@ void clear_dictionary(struct dictionary *);
 
 /* quiz.h */
 
-enum question_type {RESERVED, DEFINITION, WORD};
+enum question_type {DEFINITION, WORD};
 
 void build_quiz(struct quiz *, struct dictionary *);
 void print_quiz(struct quiz *);
 char *find_definition(struct dictionary *, struct definition_position *);
 char *find_headword(struct dictionary *, size_t);
 size_t which_entry(struct quiz *, uint32_t);
+struct definition_position *pick_definition(struct quiz *, size_t);
 unsigned generate_question(struct session *, enum question_type, unsigned);
 
 /* parse.h */
