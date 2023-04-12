@@ -1,27 +1,16 @@
+.SUFFIXES	:	.o .c
+CC		=	cc
 CFLAGS		=	-Wall -Werror
+OBJS		=	main.o session.o parse.o data.o array.o quiz.o
 
-vocabulary-tester	:	main.o session.o parse.o data.o array.o quiz.o
-	cc $(CFLAGS) -o $@ main.o session.o parse.o data.o array.o quiz.o
+vocabulary-tester	:	$(OBJS)
+	cc $(CFLAGS) -o $@ $(.ALLSRC)
 
-main.o session.o parse.o data.o array.o quiz.o		:	*.h
+$(OBJS)		:	*.h
 
-main.o		:	main.c
-	cc $(CFLAGS) -c main.c
+.c.o		:
+	$(CC) $(CFLAGS)	-c $(.IMPSRC)
 
-parse.o		:	parse.c
-	cc $(CFLAGS) -c parse.c
 
-data.o		:	data.c
-	cc $(CFLAGS) -c data.c
-
-session.o	:	session.c
-	cc $(CFLAGS) -c session.c
-
-array.o		:	array.c
-	cc $(CFLAGS) -c array.c	
-
-quiz.o		:	quiz.c
-	cc $(CFLAGS) -c quiz.c	
-
-lines : 
+lines 		: 
 	cat *.h *.c | cat -b
