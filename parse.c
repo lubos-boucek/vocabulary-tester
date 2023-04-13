@@ -38,6 +38,10 @@ parse_file(struct session *s)
 		err(1, "getline");
 
 	fclose(fp);
+
+	if (s->option_debug) {
+		print_dictionary(&s->dict);
+	}
 }
 
 void

@@ -66,6 +66,8 @@ struct session {
 
 	unsigned long quiz_options;
 	unsigned long quiz_questions;
+
+	int option_debug;
 };
 
 enum question_type {DEFINITION, HEADWORD};

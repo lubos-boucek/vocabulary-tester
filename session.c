@@ -14,6 +14,8 @@ init_session(struct session *s)
 	s->quiz_options = QUIZ_OPTIONS;
 	s->quiz_questions = QUIZ_QUESTIONS;
 
+	s->option_debug = 0;
+
 	init_dictionary(&s->dict);
 	init_questionnaire(&s->quest);
 }
@@ -24,8 +26,11 @@ process_args(struct session *s, int argc, char **argv)
 	int ch;
 	char *end;
 
-	while ((ch = getopt(argc, argv, "f:q:o:de")) != -1) {
+	while ((ch = getopt(argc, argv, "gf:q:o:dh")) != -1) {
 		switch (ch) {
+		case 'g':
+			s->option_debug = 1;
+			break;
 		case 'f':
 			s->data_filename = optarg;
 			break;
@@ -41,7 +46,7 @@ process_args(struct session *s, int argc, char **argv)
 
 			break;
 
-		case 'e':
+		case 'h':
 
 			break;
 		}
