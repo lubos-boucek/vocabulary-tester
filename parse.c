@@ -22,7 +22,9 @@ parse_file(struct session *s)
 	struct entry *new_entry;
 	int def_offset;
 
-	fp = fopen(s->data_filename, "r");
+	if((fp = fopen(s->data_filename, "r")) == NULL) {
+		err(1, "fopen");
+	}
 	
 	while ((line_length = getline(&line, &line_size, fp)) != -1) {
 		process_line(line, line_length, &state);

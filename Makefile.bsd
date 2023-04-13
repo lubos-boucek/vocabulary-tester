@@ -1,6 +1,6 @@
-sinclude Makefile.common
+.include "Makefile.common"
 
-vocabulary-tester	:	$(OBJS)
+$(PROG_NAME)	:	$(OBJS)
 	cc $(CFLAGS) -o $@ $(.ALLSRC)
 
 $(OBJS)		:	*.h
@@ -8,6 +8,8 @@ $(OBJS)		:	*.h
 .c.o		:
 	$(CC) $(CFLAGS)	-c $(.IMPSRC)
 
+clear		:
+	rm $(PROG_NAME) $(OBJS)
 
 lines 		: 
 	cat *.h *.c | cat -b

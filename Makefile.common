@@ -1,4 +1,5 @@
 .SUFFIXES	:	.o .c
 CC		=	cc
 CFLAGS		=	-Wall -Werror
+PROG_NAME	=	vocabulary_tester
 OBJS		=	main.o session.o parse.o data.o array.o quiz.o
