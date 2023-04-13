@@ -9,7 +9,7 @@ struct array {
 
 void new_array(struct array *, size_t);
 void *add_elements(struct array *, size_t);
-void *get_element(const struct array *, int);
+void *get_element(const struct array *, size_t);
 size_t get_length(const struct array *);
 void delete_array(struct array *);
 

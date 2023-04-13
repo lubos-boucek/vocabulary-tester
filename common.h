@@ -36,10 +36,9 @@ void clear_dictionary(struct dictionary *);
 char *find_headword(struct dictionary *, size_t);
 char *find_definition(struct dictionary *, struct magnifier *);
 
-/* Builds upon an existing dictionary, 
-   should be rebuilt after any change. */
+/* Extends an existing dictionary, should be rebuilt after any change. */
 struct questionnaire {
-	/* array of struct magnifier */
+	/* array of `struct magnifier` */
 	struct array magnifiers_array;
 
 	/* non-empty entries */

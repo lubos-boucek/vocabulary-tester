@@ -49,7 +49,8 @@ process_args(struct session *s, int argc, char **argv)
 
 	validate_args(s);
 
-	printf("DEBUG: questions = %lu, options = %lu\n", s->quiz_questions, s->quiz_options);
+	printf("DEBUG: questions = %lu, options = %lu\n", \
+s->quiz_questions, s->quiz_options);
 }
 
 void
@@ -80,7 +81,8 @@ ask_questions(struct session *s)
 	unsigned long correct, answer, i, score = 0;
 
 	for (i = 0; i < s->quiz_questions; i++) {
-		correct = generate_question(s, arc4random_uniform(2), s->quiz_options);
+		correct = generate_question(s, arc4random_uniform(2), \
+s->quiz_options);
 		printf("Your answer: ");
 		scanf("%lu", &answer);
 		fflush(stdin);
@@ -118,7 +120,8 @@ generate_question(struct session *s, enum question_type type, unsigned n_options
 		r = arc4random_uniform(get_length(&s->quest.magnifiers_array));
 		dp = get_element(&s->quest.magnifiers_array, r);
 
-		printf("Which word could be defined by the definition `%s`\n", find_definition(&s->dict, dp));
+		printf("Which word could be defined by the definition `%s`\n", \
+find_definition(&s->dict, dp));
 
 		for (i = 0; i < n_options; i++) {
 			if (i == correct_position) {
@@ -127,7 +130,11 @@ generate_question(struct session *s, enum question_type type, unsigned n_options
 			}
 			else {
 				r = arc4random_uniform(s->quest.entries_count);
-				entry_index = which_entry(&s->quest, r); } e = get_element(&s->dict.entries_array, entry_index); printf("\t%d) %s\n", i + 1, e->headword);
+				entry_index = which_entry(&s->quest, r); 
+			} 
+
+			e = get_element(&s->dict.entries_array, entry_index); 
+			printf("\t%d) %s\n", i + 1, e->headword);
 		}
 	} else if (type == WORD) {
 		r = arc4random_uniform(s->quest.entries_count);

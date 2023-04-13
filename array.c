@@ -21,11 +21,10 @@ a->element_size)) == NULL) {
 	return a->address + a->element_size * (a->n_elements - n);
 }
 
-/* TODO: size_t p ? */
 void *
-get_element(const struct array *a, int p)
+get_element(const struct array *a, size_t p)
 {
-	if (p < 0 || p > a->n_elements - 1)
+	if (p > a->n_elements - 1)
 		return NULL;
 
 	return a->address + a->element_size * p;
