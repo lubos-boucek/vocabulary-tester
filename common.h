@@ -68,9 +68,11 @@ struct session {
 	unsigned long quiz_questions;
 };
 
-enum question_type {DEFINITION, WORD};
+enum question_type {DEFINITION, HEADWORD};
 
 unsigned generate_question(struct session *, enum question_type, unsigned);
+unsigned generate_definition_question(struct session *s, unsigned n_options);
+unsigned generate_headword_question(struct session *s, unsigned n_options);
 
 void init_session(struct session *);
 void process_args(struct session *, int, char **);
@@ -82,7 +84,7 @@ void clear_session(struct session *);
 
 /* parse.h */
 
-enum parsing_state {BETWEEN, HEADWORD, ENTRY};
+enum parsing_state {CONTEXT_BETWEEN, CONTEXT_HEADWORD, CONTEXT_ENTRY};
 
 void parse_file(struct session *);
 void process_line(const char *, ssize_t, enum parsing_state *);

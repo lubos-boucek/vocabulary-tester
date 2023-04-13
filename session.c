@@ -79,13 +79,17 @@ void
 ask_questions(struct session *s)
 {
 	unsigned long correct, answer, i, score = 0;
+	int read;
 
 	for (i = 0; i < s->quiz_questions; i++) {
 		correct = generate_question(s, arc4random_uniform(2), \
 s->quiz_options);
 		printf("Your answer: ");
-		scanf("%lu", &answer);
-		fflush(stdin);
+		
+		while ((read = scanf("%lu", &answer)) < 1) {
+			fpurge(stdin);
+			printf("Invalid input, try again: ");
+		}
 		if (correct == answer) {
 			printf("Correct!\n");
 			score++;
@@ -104,54 +108,76 @@ clear_session(struct session *s)
 	clear_dictionary(&s->dict);
 }
 
-/* TODO: rework into multiple functions */
-unsigned
+unsigned 
 generate_question(struct session *s, enum question_type type, unsigned n_options)
 {
+	switch (type) {
+	case (DEFINITION):
+		return generate_definition_question(s, n_options);
+		break;
+	case (HEADWORD):
+		return generate_headword_question(s, n_options);
+		break;
+	}
+}
+
+unsigned
+generate_definition_question(struct session *s, unsigned n_options)
+{
 	uint32_t r, correct_position;
-	struct magnifier *dp;
+	struct magnifier *m;
 	struct entry *e;
-	int i;
 	size_t entry_index;
+	unsigned i;
 
 	correct_position = arc4random_uniform(n_options);
 
-	if (type == DEFINITION) {
-		r = arc4random_uniform(get_length(&s->quest.magnifiers_array));
-		dp = get_element(&s->quest.magnifiers_array, r);
+	r = arc4random_uniform(get_length(&s->quest.magnifiers_array));
+	m = get_element(&s->quest.magnifiers_array, r);
 
-		printf("Which word could be defined by the definition `%s`\n", \
-find_definition(&s->dict, dp));
+	printf("Which word could be defined by the definition `%s`\n", \
+find_definition(&s->dict, m));
 
-		for (i = 0; i < n_options; i++) {
-			if (i == correct_position) {
-				r = 0;
-				entry_index = dp->entry_index;
-			}
-			else {
-				r = arc4random_uniform(s->quest.entries_count);
-				entry_index = which_entry(&s->quest, r); 
-			} 
-
-			e = get_element(&s->dict.entries_array, entry_index); 
-			printf("\t%d) %s\n", i + 1, e->headword);
+	for (i = 0; i < n_options; i++) {
+		if (i == correct_position) {
+			r = 0;
+			entry_index = m->entry_index;
 		}
-	} else if (type == WORD) {
-		r = arc4random_uniform(s->quest.entries_count);
+		else {
+			r = arc4random_uniform(s->quest.entries_count);
+			entry_index = which_entry(&s->quest, r); 
+		} 
 
-		entry_index = which_entry(&s->quest, r);
-		printf("Which definition could be used to describe this word: `%s`\n", find_headword(&s->dict, entry_index)); 
+		e = get_element(&s->dict.entries_array, entry_index); 
+		printf("\t%d) %s\n", i + 1, e->headword);
+	}
 
-		for (i = 0; i < n_options; i++) {
-			if (i == correct_position) {
-				dp = pick_definition(&s->quest, entry_index);
-			} else {
-				r = arc4random_uniform(get_length(&s->quest.magnifiers_array));
-				dp = get_element(&s->quest.magnifiers_array, r);
-			}
+	return correct_position + 1;
+}
 
-			printf("\t%d) %s\n", i + 1, find_definition(&s->dict, dp));
+unsigned
+generate_headword_question(struct session *s, unsigned n_options)
+{
+	uint32_t r, correct_position;
+	struct magnifier *m;
+	size_t entry_index;
+	unsigned i;
+
+	correct_position = arc4random_uniform(n_options);
+	r = arc4random_uniform(s->quest.entries_count);
+
+	entry_index = which_entry(&s->quest, r);
+	printf("Which definition could be used to describe this word: `%s`\n", find_headword(&s->dict, entry_index)); 
+
+	for (i = 0; i < n_options; i++) {
+		if (i == correct_position) {
+			m = pick_definition(&s->quest, entry_index);
+		} else {
+			r = arc4random_uniform(get_length(&s->quest.magnifiers_array));
+			m = get_element(&s->quest.magnifiers_array, r);
 		}
+
+		printf("\t%d) %s\n", i + 1, find_definition(&s->dict, m));
 	}
 
 	return correct_position + 1;

@@ -15,10 +15,7 @@ parse_file(struct session *s)
 	char *line = NULL;
 	size_t line_size = 0;
 	ssize_t line_length;
-	enum parsing_state state = BETWEEN;
-/*	
-	enum parsing_state old_state;
-*/
+	enum parsing_state state = CONTEXT_BETWEEN;
 	struct entry *new_entry;
 	int def_offset;
 
@@ -28,10 +25,10 @@ parse_file(struct session *s)
 	
 	while ((line_length = getline(&line, &line_size, fp)) != -1) {
 		process_line(line, line_length, &state);
-		if (state == HEADWORD) {
+		if (state == CONTEXT_HEADWORD) {
 			new_entry = add_entry(&s->dict);
 			update_headword(new_entry, line, line_length);
-		} else if (state == ENTRY && (def_offset = is_definition(line)) > -1) {
+		} else if (state == CONTEXT_ENTRY && (def_offset = is_definition(line)) > -1) {
 			add_definition(new_entry, line + def_offset, line_length - def_offset);
 		}
 	}
@@ -58,12 +55,12 @@ process_line(const char *line, ssize_t line_length, enum parsing_state *state)
 /*
  	fwrite(line, line_length, 1, stdout);
 */
-	if (*state == BETWEEN && !is_blank) {
-		*state = HEADWORD;
+	if (*state == CONTEXT_BETWEEN && !is_blank) {
+		*state = CONTEXT_HEADWORD;
 	} else if (!is_blank) {
-		*state = ENTRY;
+		*state = CONTEXT_ENTRY;
 	} else {
-		*state = BETWEEN;
+		*state = CONTEXT_BETWEEN;
 	}
 }
 
