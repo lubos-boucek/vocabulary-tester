@@ -1,7 +1,4 @@
-.SUFFIXES	:	.o .c
-CC		=	cc
-CFLAGS		=	-Wall -Werror
-OBJS		=	main.o session.o parse.o data.o array.o quiz.o
+sinclude Makefile.common
 
 vocabulary-tester	:	$(OBJS)
 	cc $(CFLAGS) -o $@ $^
