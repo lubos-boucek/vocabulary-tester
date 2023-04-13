@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "common.platforms.h"
+#include "compat/common.h"
 #include "array.h"
 
 struct entry {
