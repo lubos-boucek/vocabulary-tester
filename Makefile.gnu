@@ -1,5 +1,7 @@
 sinclude Makefile.common
 
+OBJS += strlcpy.o
+
 vocabulary-tester	:	$(OBJS)
 	cc $(CFLAGS) -o $@ $^
 

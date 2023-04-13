@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include "common.platforms.h"
 #include "array.h"
 
 struct entry {
