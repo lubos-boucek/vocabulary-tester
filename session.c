@@ -122,6 +122,8 @@ generate_question(struct session *s, enum question_type type, unsigned n_options
 		return generate_headword_question(s, n_options);
 		break;
 	}
+
+	return 0;
 }
 
 unsigned
