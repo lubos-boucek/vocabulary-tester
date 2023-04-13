@@ -7,8 +7,8 @@
 void
 init_session(struct session *s)
 {
-	s->config_filename = "config.txt";
-	s->data_filename = "learners.en.txt";
+	s->config_filename = "";
+	s->data_filename = "";
 
 	/* default */
 	s->quiz_options = QUIZ_OPTIONS;
@@ -48,9 +48,6 @@ process_args(struct session *s, int argc, char **argv)
 	}
 
 	validate_args(s);
-
-	printf("DEBUG: questions = %lu, options = %lu\n", \
-s->quiz_questions, s->quiz_options);
 }
 
 void
@@ -79,15 +76,16 @@ void
 ask_questions(struct session *s)
 {
 	unsigned long correct, answer, i, score = 0;
-	int read;
+	int ch;
 
 	for (i = 0; i < s->quiz_questions; i++) {
 		correct = generate_question(s, arc4random_uniform(2), \
 s->quiz_options);
 		printf("Your answer: ");
 		
-		while ((read = scanf("%lu", &answer)) < 1) {
-			fpurge(stdin);
+		while (scanf("%lu", &answer) < 1) {
+			while ((ch = getchar()) != '\n')
+				;
 			printf("Invalid input, try again: ");
 		}
 		if (correct == answer) {
