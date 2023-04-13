@@ -80,7 +80,7 @@ is_definition(const char *line)
 	for (i = 0; line[i]; i++) {
 		if (isblank(line[i]))
 			continue;
-		if (line[i] == ':')
+		if (line[i] == ':' || isdigit(line[i]))
 			return i;
 /*
 		else if (isdigit(line[i])) {
